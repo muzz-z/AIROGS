@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+  .admin-sidebar {
+    background: linear-gradient(180deg, #1f2933, #111827);
+    min-height: 100vh;
+  }
+  .admin-btn {
+    text-align: left;
+    font-weight: 500;
+    border-radius: 8px;
+  }
+  .admin-btn.active {
+    background-color: #0d6efd;
+    color: #ffffff;
+  }
+  .admin-section {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* Main content area dark theme */
+  #content-area {
+    background: linear-gradient(180deg, #0f1724, #071021);
+    color: #ffffff;
+    min-height: 100vh;
+  }
+  /* Fix headings visibility */
+  .admin-section h3, .admin-section h2 {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    margin-bottom: 20px;
+  }
+  /* Fix table text visibility */
+  .table tbody td {
+    color: #000000 !important;
+    font-weight: 500;
+    background-color: #ffffff !important;
+  }
+  .table thead th {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    background-color: #333333 !important;
+  }
+  .table-primary thead th {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+  }
+  .table-dark thead th {
+    background-color: #222222 !important;
+    color: #ffffff !important;
+  }
+  .table-secondary thead th {
+    background-color: #6c757d !important;
+    color: #ffffff !important;
+  }
+  /* Analytics cards styling */
+  .card {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+  }
+  .card-body {
+    color: #ffffff !important;
+  }
+  .card h6, .card h5, .card h4, .card h3 {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+  }
+  .card h3 {
+    font-size: 2.5rem !important;
+    margin: 15px 0 !important;
+    color: #3b82f6 !important;
+  }
+  .card h6 {
+    color: #cfe6ff !important;
+    font-size: 0.95rem !important;
+  }
+  /* Text muted override */
+  .text-muted {
+    color: #9ca3af !important;
+  }
+  /* Badge colors */
+  .badge {
+    font-weight: 600;
+  }
+</style>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- SIDEBAR -->
+    <div class="col-md-3 col-lg-2 admin-sidebar text-white p-3">
+      <h4 class="text-center mb-4">🛠 Admin Panel</h4>
+
+      <button class="btn btn-outline-light w-100 mb-2 admin-btn active"
+              onclick="showSection('users', this)">
+        👥 User Management
+      </button>
+
+      <button class="btn btn-outline-light w-100 mb-2 admin-btn"
+              onclick="showSection('results', this)">
+        🧠 AI Results
+      </button>
+
+      <button class="btn btn-outline-light w-100 mb-2 admin-btn"
+              onclick="showSection('analytics', this)">
+        📊 Analytics
+      </button>
+
+      
+
+      <a href="{% url 'logout' %}" class="btn btn-danger w-100 mt-4">
+        🚪 Logout
+      </a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="col-md-9 col-lg-10 p-4" id="content-area">
+
+      <!-- USERS -->
+      <div id="users" class="admin-section">
+        <h3>👥 User Management</h3>
+
+        {% if users %}
+        <table class="table table-bordered table-hover mt-3">
+          <thead class="table-dark">
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Last Login</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+            <tr>
+              <td>{{ user.username }} <span class="badge bg-info text-dark ms-2">Nice</span></td>
+              <td>{{ user.email|default:"—" }}</td>
+              <td>{{ user.last_login|default:"Never" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p class="text-muted mt-3">No users found.</p>
+        {% endif %}
+      </div>
+
+      <!-- RESULTS -->
+      <div id="results" class="admin-section d-none">
+        <h3>🧠 AI Screening Results</h3>
+
+        {% if results %}
+        <table class="table table-striped mt-3">
+          <thead class="table-primary">
+            <tr>
+              <th>User</th>
+              <th>Prediction</th>
+              <th>Confidence (%)</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in results %}
+            <tr>
+              <td>{{ r.user.username }} <span class="badge bg-info text-dark ms-2">Nice</span></td>
+              <td>
+                {% if r.prediction == "Glaucoma" %}
+                  <span class="badge bg-danger">Glaucoma</span>
+                {% else %}
+                  <span class="badge bg-success">Normal</span>
+                {% endif %}
+              </td>
+              <td>{{ r.confidence }}%</td>
+              <td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p class="text-muted mt-3">No screening results available.</p>
+        {% endif %}
+      </div>
+
+      <!-- ANALYTICS -->
+      <div id="analytics" class="admin-section d-none">
+        <h3>📊 System Analytics</h3>
+
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <div class="card shadow-sm">
+              <div class="card-body text-center">
+                <h6>Total Users</h6>
+                <h3>{{ total_users }}</h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card shadow-sm">
+              <div class="card-body text-center">
+                <h6>Total Predictions</h6>
+                <h3>{{ total_predictions }}</h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card shadow-sm border-danger">
+              <div class="card-body text-center text-danger">
+                <h6>Glaucoma Cases</h6>
+                <h3>{{ glaucoma_cases }}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEEDBACK -->
+      <div id="feedback" class="admin-section d-none">
+        <h3>💬 User Feedback</h3>
+
+        {% if feedbacks %}
+        <table class="table table-hover mt-3">
+          <thead class="table-secondary">
+            <tr>
+              <th>User</th>
+              <th>Message</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in feedbacks %}
+            <tr>
+              <td>{{ f.user.username }}</td>
+              <td>{{ f.message }}</td>
+              <td>{{ f.created_at|date:"Y-m-d" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p class="text-muted mt-3">No feedback submitted yet.</p>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function showSection(sectionId, btn) {
+  document.querySelectorAll('.admin-section').forEach(sec => {
+    sec.classList.add('d-none');
+  });
+  document.getElementById(sectionId).classList.remove('d-none');
+
+  document.querySelectorAll('.admin-btn').forEach(b => {
+    b.classList.remove('active');
+  });
+  btn.classList.add('active');
+}
+</script>
+
+{% endblock %}

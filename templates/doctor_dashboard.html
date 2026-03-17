@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="text-primary fw-bold">
+                <i class="fas fa-user-md"></i> Doctor Dashboard
+            </h2>
+            <p class="text-muted">
+                Welcome, <strong>Dr. {{ user.get_full_name|default:user.username }}</strong>.
+                Here are your glaucoma screening records.
+            </p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white shadow text-center">
+                <div class="card-body">
+                    <h5>Total Scans</h5>
+                    <h2>{{ total_scans }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-danger text-white shadow text-center">
+                <div class="card-body">
+                    <h5>Glaucoma Cases</h5>
+                    <h2>{{ glaucoma_cases }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-success text-white shadow text-center">
+                <div class="card-body">
+                    <h5>Normal Cases</h5>
+                    <h2>{{ normal_cases }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-info text-white shadow text-center">
+                <div class="card-body">
+                    <h5>Detection Rate</h5>
+                    <h2>{{ detection_rate }}%</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Records Table -->
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-list"></i> Recent Screening Records
+            </h5>
+        </div>
+
+        <div class="card-body">
+            {% if results %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Patient ID</th>
+                            <th>Patient Name</th>
+                            <th>Age</th>
+                            <th>Image</th>
+                            <th>Diagnosis</th>
+                            <th>Confidence</th>
+                            <th>Date</th>
+                            <th>Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in results %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ r.patient_id|default:"—" }}</td>
+                            <td>{{ r.patient_name|default:"—" }}</td>
+                            <td>{{ r.patient_age|default:"—" }}</td>
+                            <td>
+                                <img src="{{ r.image.url }}" class="img-thumbnail" style="height:50px;">
+                            </td>
+                            <td>
+                                {% if r.prediction == "Glaucoma" %}
+                                    <span class="badge bg-danger">Glaucoma</span>
+                                {% else %}
+                                    <span class="badge bg-success">Normal</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ r.confidence|floatformat:2 }}%</td>
+                            <td>{{ r.created_at|date:"d M Y H:i" }}</td>
+                            <td>
+                                <a href="/report/?case={{ r.id }}" class="btn btn-sm btn-outline-primary">
+                                    PDF
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    No screening records found.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a href="/upload/" class="btn btn-success btn-lg">
+            Perform New Screening
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

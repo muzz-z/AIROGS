@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Admin Dashboard</h3>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <a href="{% url 'admin_users' %}" class="btn btn-dark w-100 mb-2">👥 Users</a>
+        <a href="{% url 'admin_results' %}" class="btn btn-primary w-100 mb-2">📊 Results</a>
+        <a href="{% url 'admin_feedback' %}" class="btn btn-success w-100 mb-2">💬 Feedback</a>
+        <a href="{% url 'admin_analytics' %}" class="btn btn-warning w-100">📈 Analytics</a>
+    </div>
+
+    <div class="col-md-9">
+        <div class="alert alert-info">
+            Manage users, view predictions, analyze system performance.
+        </div>
+    </div>
+</div>
+
+{% endblock %}

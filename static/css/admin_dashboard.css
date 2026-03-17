@@ -1,0 +1,25 @@
+/* Elegant admin dashboard styles and subtle animations */
+:root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#6c7ef3;--accent-2:#00c2a8;--danger:#ff6b6b}
+body{background:linear-gradient(180deg,#071021 0%,#0f1724 100%);font-family:Inter,Segoe UI,Arial,sans-serif;color:#e6eef8}
+.admin-dashboard{max-width:1200px;margin:28px auto;padding:20px}
+.ad-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.ad-header h1{font-weight:700;letter-spacing:-0.5px}
+.ad-actions .btn{margin-left:8px}
+.panels{display:grid;grid-template-columns:1fr 1.2fr;gap:18px}
+.panel{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(3,6,15,0.6)}
+.panel h2{margin:0 0 10px 0;font-size:18px;color:#eaf4ff}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:10px 12px;text-align:left;font-size:13px;color:#000000;font-weight:500}
+.table thead th{color:#ffffff;font-weight:700;font-size:13px;background-color:#333333}
+.thumb{width:56px;height:40px;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,0.04)}
+.btn{display:inline-block;padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#ffffff;text-decoration:none;cursor:pointer;transition:transform .12s ease,box-shadow .12s;font-weight:500}
+.btn.primary{background:var(--accent);box-shadow:0 6px 18px rgba(108,126,243,0.15);color:#ffffff}
+.btn.accent{background:var(--accent-2);box-shadow:0 6px 18px rgba(0,194,168,0.12);color:#ffffff}
+.btn.danger{background:linear-gradient(90deg,#ff7b7b,#ff6b6b);color:#fff}
+.btn.small{padding:6px 8px;font-size:12px;border-radius:6px}
+.inline-form{display:inline-block;margin:0 4px}
+.result-controls{margin-bottom:10px}
+.fade-in{animation:fadeUp .28s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* responsive */
+@media (max-width:980px){.panels{grid-template-columns:1fr;}.ad-header{flex-direction:column;align-items:flex-start}.ad-actions{margin-top:10px}}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <div class="card shadow border-0">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0">Glaucoma Screening - Patient Information & Image Upload</h4>
+            </div>
+
+            <div class="card-body p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Patient Information Section -->
+                    <div class="border-bottom pb-4 mb-4">
+                        <h5 class="text-primary mb-3">
+                            <i class="fas fa-user-md"></i> Patient Information
+                        </h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Patient ID</label>
+                                <input type="text" name="patient_id" class="form-control" placeholder="e.g., P12345" required>
+                                <small class="text-muted">Unique patient identifier</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Patient Age</label>
+                                <input type="number" name="patient_age" class="form-control" min="1" max="150" placeholder="e.g., 45" required>
+                                <small class="text-muted">Age in years</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Patient Name</label>
+                            <input type="text" name="patient_name" class="form-control" placeholder="Full name" required>
+                            <small class="text-muted">Complete patient name</small>
+                        </div>
+                    </div>
+
+                    <!-- Fundus Image Section -->
+                    <div class="mb-4">
+                        <h5 class="text-primary mb-3">
+                            <i class="fas fa-image"></i> Fundus Image
+                        </h5>
+                        <label class="form-label fw-bold">Upload Fundus Photograph</label>
+                        <input id="imageInput" type="file" name="image" class="form-control" accept="image/*" required>
+                        <small class="text-muted">Supported formats: JPG, PNG, GIF (Max 10MB)</small>
+                        <div class="mt-3 text-center">
+                            <img id="preview" src="#" class="img-fluid rounded border" style="max-height:300px; display:none;" />
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-flask"></i> Start AI Screening
+                        </button>
+                    </div>
+                </form>
+
+                <script>
+                    const input = document.getElementById('imageInput');
+                    const preview = document.getElementById('preview');
+                    input.addEventListener('change', e => {
+                        const file = e.target.files[0];
+                        if (!file) { preview.style.display='none'; return; }
+                        const reader = new FileReader();
+                        reader.onload = ev => {
+                            preview.src = ev.target.result;
+                            preview.style.display = 'block';
+                        }
+                        reader.readAsDataURL(file);
+                    });
+                </script>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

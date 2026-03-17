@@ -1,0 +1,11 @@
+Django
+tensorflow
+pillow
+numpy
+opencv-python
+pandas
+matplotlib
+scikit-learn
+django-crispy-forms
+psycopg2-binary
+gunicorn

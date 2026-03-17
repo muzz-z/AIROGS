@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Analytics</h3>
+
+<ul class="list-group mt-3">
+    <li class="list-group-item">Total Users: {{ total_users }}</li>
+    <li class="list-group-item">Total Predictions: {{ total_predictions }}</li>
+    <li class="list-group-item text-danger">Glaucoma Cases: {{ glaucoma_cases }}</li>
+</ul>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+</head>
+<body>
+  <div class="adm-wrap">
+    <header class="adm-header">
+      <h1>Admin Dashboard</h1>
+      <nav class="adm-nav">
+        <a href="#" class="btn primary" id="btn-overview">Overview</a>
+        <a href="{% url 'dashboard:manage_users' %}" class="btn" id="btn-users">Manage Users</a>
+        <a href="{% url 'dashboard:results_list' %}" class="btn" id="btn-results">View Results</a>
+        <a href="{% url 'dashboard:download_results' %}" class="btn accent" id="btn-export">Export CSV</a>
+        <a href="/admin/" class="btn" id="btn-django-admin">Django Admin</a>
+      </nav>
+    </header>
+
+    <main class="adm-main">
+      <section class="cards">
+        <div class="card pulse">
+          <h2>Screenings</h2>
+          <p class="stat">{{ results_count|default:0 }}</p>
+        </div>
+        <div class="card">
+          <h2>Users</h2>
+          <p class="stat">{{ users_count|default:0 }}</p>
+        </div>
+        <div class="card">
+          <h2>Actions</h2>
+          <div class="card-actions">
+            <a class="btn" href="{% url 'dashboard:results_list' %}">Open Results</a>
+            <a class="btn accent" href="{% url 'dashboard:download_results' %}">Download CSV</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="table-section" id="section-content">
+        {% if active_tab == 'users' %}
+          <h3>Users</h3>
+          <table class="table">
+            <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Staff</th></tr></thead>
+            <tbody>
+            {% for u in users %}
+              <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.username }} <span class="badge bg-info text-dark ms-2">Nice</span></td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.is_staff }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4">No users found</td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <h3>Results</h3>
+          <table class="table">
+            <thead><tr><th>#</th><th>Image</th><th>Prediction</th><th>Date</th></tr></thead>
+            <tbody>
+            {% for r in results %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{% if r.image_url %}<img src="{{ r.image_url }}" class="thumb">{% else %}—{% endif %}</td>
+                <td>{{ r.prediction|default:'N/A' }}</td>
+                <td>{{ r.created_at|date:'Y-m-d H:i'|default:'-' }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4">No results available</td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      </section>
+
+    </main>
+
+    <footer class="adm-footer">Glaucoma AI — Admin Panel</footer>
+  </div>
+  <script src="{% static 'js/admin_dashboard.js' %}"></script>
+</body>
+</html>

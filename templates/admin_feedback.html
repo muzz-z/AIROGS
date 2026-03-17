@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Admin Feedback</h3>
+
+<div class="card mt-3 p-3">
+    {% if feedbacks %}
+        <ul class="list-group">
+            {% for f in feedbacks %}
+                <li class="list-group-item">
+                    <strong>User:</strong> {{ f.user.username }} — <strong>Result:</strong> {{ f.result }}
+                    <div>{{ f.comment }}</div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-info">No feedback available.</div>
+    {% endif %}
+</div>
+
+{% endblock %}
